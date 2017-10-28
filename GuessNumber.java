@@ -25,25 +25,33 @@ public class GuessNumber {
         //     }
         // }   
 
+        
         try{
 
-            game.connectionMethod("research.inf.usi.ch",9999);
+            Socket clientSocket = new Socket("research.inf.usi.ch",9999);
+            game.connectionMethod(clientSocket);
         } catch (IOException e){ //can never happen}
 
             System.out.println("EXEP");
         }
     }
 
+    
 
 
-    public void connectionMethod(String host, int port)
+    public void connectionMethod(Socket clientSocket)
     throws IOException {
-
+        String host = clientSocket.getInetAddress().getHostName();
+        Integer port = clientSocket.getPort();
         String path = "new-player";
 
         // Opening Connection based on the port number 80(HTTP) and 443(HTTPS)
 
-        Socket clientSocket = new Socket(host, port);
+        
+
+        System.out.println("PORT: "+clientSocket.getPort()+ " inet: "+ clientSocket.getInetAddress().getHostName());
+
+        System.out.println();
 
         System.out.println("======================================");
         System.out.println("Connected");
