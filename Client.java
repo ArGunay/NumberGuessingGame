@@ -8,21 +8,27 @@ import java.util.List;
 
 public class Client{
 
-
     private String cookie;
     private String host;
     private int port;
-    
 
-    Client(){
-
+    Client(String host, int port){
+        this.host = host;
+        this.port = port;
     }
 
+
+
+    // =================================================================================
+    // ==================================          =====================================
+    // ==================================   GET    =====================================
+    // ==================================          =====================================
+    // =================================================================================
 
     public void getMethod()
     throws IOException {
 
-        Socket clientSocket = new Socket("research.inf.usi.ch",9999);
+        Socket clientSocket = new Socket(this.host,this.port);
         String host = clientSocket.getInetAddress().getHostName(); 
         // System.out.println("HOST IS: "+ host);
         // Integer port = clientSocket.getPort();
@@ -98,10 +104,10 @@ public class Client{
 
         try{
 
-            Socket clientSocket = new Socket("research.inf.usi.ch",9999);
+            Socket clientSocket = new Socket(this.host,this.port);
             
             String host = clientSocket.getInetAddress().getHostName(); 
-            System.out.println("POST HOST " + host);
+            System.out.println("POST HOST " + this.host);
             String path = "check-number";
         
             PrintWriter request = new PrintWriter(clientSocket.getOutputStream(),true);
@@ -126,14 +132,14 @@ public class Client{
             request.print("Connection: close\r\n");
             request.print("\r\n");
             request.flush();
-
             System.out.println("======================================");
             System.out.println("POST REQUEST Sent!");
             System.out.println("======================================");
 
 
-            String htmlContent = "10";
-            request.print(htmlContent); //System.out.println("htmlcontent: " + htmlContent);
+            int htmlContent = 1;
+            // System.out.println("htmlContent: "+ htmlContent);
+            request.print(htmlContent); 
             request.flush();
 
             
@@ -142,16 +148,17 @@ public class Client{
         
             List<String> postResp = new ArrayList<>();
 
-            String resPonse = "";
+     
 
             while ((responseLine = response.readLine()) != null) 
             {
                 System.out.println(responseLine);
                 // process.add(responseLine);
                 postResp.add(responseLine);
-                resPonse += responseLine;
+               
             }
 
+            
             System.out.println("======================================");
             System.out.println("POST Response Recieved!!");
             System.out.println("======================================");
