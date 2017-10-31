@@ -4,20 +4,20 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
+// ========================== CLIENT ====================================
 public class Client{
 
+    // =================== FIELDS ====================
     private String cookie;
     private String host;
     private int port;
 
+    // =============== CONSTRUCTOR ==============
     Client(String host, int port){
         this.host = host;
         this.port = port;
     }
-
-
 
     // =================================================================================
     // ==================================          =====================================
@@ -25,25 +25,17 @@ public class Client{
     // ==================================          =====================================
     // =================================================================================
 
-    public void getMethod()
-    throws IOException {
+    public void getMethod() throws IOException {
+
+        // System.out.println("======================================");
+        // System.out.println("GET REQUEST!");
+        // System.out.println("======================================");
+    
 
         Socket clientSocket = new Socket(this.host,this.port);
         String host = clientSocket.getInetAddress().getHostName(); 
-        // System.out.println("HOST IS: "+ host);
-        // Integer port = clientSocket.getPort();
+
         String path = "new-player";
-
-        // Opening Connection based on the port number 80(HTTP) and 443(HTTPS)
-
-        
-        System.out.println("PORT: "+clientSocket.getPort()+ " inet: "+ clientSocket.getInetAddress());
-
-        System.out.println();
-
-        System.out.println("======================================");
-        System.out.println("Connected");
-        System.out.println("======================================");
 
         // Declare a writer to this url
         PrintWriter request = new PrintWriter(clientSocket.getOutputStream(),true);
@@ -60,18 +52,16 @@ public class Client{
         request.print("Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n");
         request.print("\r\n");
         request.flush();
-        // System.out.println("Request Sent!");
-        // System.out.println("======================================");
 
-        
+        System.out.println();
         // Receiving response from server
         String responseLine;
 
-        //        String beacon = l.substring(l.indexOf("=")+1,l.length());
-        List<String> li = new ArrayList<>();
+
+        ArrayList<String> li = new ArrayList<>();
 
         while ((responseLine = response.readLine()) != null) {
-            // System.out.println(responseLine);
+            System.out.println("respLine: " + responseLine);
             li.add(responseLine);
         }
 
@@ -80,15 +70,10 @@ public class Client{
 
         // get the cookie number
         this.cookie = l.substring(l.indexOf("=")+1,l.length());
-        // System.out.println("cookie = "+ this.cookie);
 
-        System.out.println("======================================");
-        System.out.println("Response Recieved!!");
-        System.out.println("======================================");
-
-            clientSocket.close();
-            response.close();
-            request.close();
+        clientSocket.close();
+        response.close();
+        request.close();
 
     }
 
@@ -99,81 +84,72 @@ public class Client{
     // =================================================================================
 
 
-    public void postMethod(){
+    public String postMethod(String number) throws IOException {
+        
+        // System.out.println();
+        // System.out.println("======================================");
+        // System.out.println("POST REQUEST!");
+        // System.out.println("======================================");
+
+
         
 
-        try{
-
-            Socket clientSocket = new Socket(this.host,this.port);
-            
-            String host = clientSocket.getInetAddress().getHostName(); 
-            System.out.println("POST HOST " + this.host);
-            String path = "check-number";
+        Socket clientSocket = new Socket(this.host,this.port);
         
-            PrintWriter request = new PrintWriter(clientSocket.getOutputStream(),true);
-            // System.out.println("POST REQ " + request);
+        String host = clientSocket.getInetAddress().getHostName(); 
 
-            // Declare a listener to this url
-
-            BufferedReader response = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            // System.out.println("POST RESP " + response);
+        String path = "check-number";
+    
+        PrintWriter request = new PrintWriter(clientSocket.getOutputStream(),true);
 
 
-            // Sending request to the server
-            // Building HTTP request header
+        // Declare a listener to this url
+        BufferedReader response = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            request.print("POST /" + path + "/ HTTP/1.1\r\n");    //  System.out.println("POST PATH " + path);
-            request.print("Host: " + host + "\r\n");             //   System.out.println("POST HOST " + host);
-            request.print("Cookie: id="+ cookie + "\r\n");             System.out.println("POST cookie: id="+ cookie);
-            request.print("accept: text/plain"+ "\r\n");
-            request.print("Content-Length: 1"+ "\r\n");
+       
+        // Sending request to the server
+        // Building HTTP request header
+        request.print("POST /" + path + "/ HTTP/1.1\r\n");    
+        request.print("Host: " + host + "\r\n");             
+        request.print("Cookie: id="+ cookie + "\r\n");      // System.out.println("COOKIE: " + cookie);      
+        request.print("accept: text/plain"+ "\r\n");
+        request.print("Content-Length: "+ number.length()+"\r\n");
+        request.print("accept-charset: UTF-8 \r\n");
 
-            //request.print("Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n");
-            request.print("Connection: close\r\n");
-            request.print("\r\n");
-            request.flush();
-            System.out.println("======================================");
-            System.out.println("POST REQUEST Sent!");
-            System.out.println("======================================");
+        request.print("Connection: close\r\n");
+        request.print("\r\n");
+        request.flush();
 
 
-            int htmlContent = 1;
-            // System.out.println("htmlContent: "+ htmlContent);
-            request.print(htmlContent); 
-            request.flush();
+        //String htmlContent = number;
+       // System.out.println("htmlcontent: " + htmlContent); 
+       String htmlContent = number;
+        request.print(htmlContent); 
+        request.flush();
 
-            
-            // Receiving response from server
-            String responseLine;
         
-            List<String> postResp = new ArrayList<>();
+        // Receiving response from server
+        String responseLine;
+    
 
-     
 
-            while ((responseLine = response.readLine()) != null) 
-            {
-                System.out.println(responseLine);
-                // process.add(responseLine);
-                postResp.add(responseLine);
-               
-            }
-
-            
-            System.out.println("======================================");
-            System.out.println("POST Response Recieved!!");
-            System.out.println("======================================");
-            
-            
-            //Closing socket resp and req
-            clientSocket.close();
-            response.close();
-            request.close();
-        } 
-        catch(IOException e)
-        { 
-            System.out.println("REPLY METHOD ERROR " + e);
+        
+        String s = "";
+        while ((responseLine = response.readLine()) != null) 
+        {
+           // System.out.println(responseLine);
+            s += " " + responseLine;
         }
-    }
+        //Closing socket resp and req
+        clientSocket.close();
+        response.close();
+        request.close();
+
+        
+        return s;
+    } 
+        
+    
 }
 
 
