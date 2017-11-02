@@ -51,10 +51,10 @@ public class Client{
         // Receiving response from server
         //readLine takes one line per time from the response
         // It is saved in an array.
-        String responseLine;
+        String serverResponse;
         ArrayList<String> outputResponse = new ArrayList<>();
-        while ((responseLine = response.readLine()) != null) {
-            outputResponse.add(responseLine);
+        while ((serverResponse = response.readLine()) != null) {
+            outputResponse.add(serverResponse);
         }
 
         //Get 3rd element of the arraylist that is the set-cookie strig
@@ -80,8 +80,6 @@ public class Client{
     // ==================================   post   =====================================
     // ==================================          =====================================
     // =================================================================================
-
-
     public String postMethod(String number) throws IOException {
 
 
@@ -97,33 +95,28 @@ public class Client{
         // Declare a listener to this url
         BufferedReader response = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-       
+        String content = number;
         // Sending request to the server
         // Building HTTP request header
         request.print("POST /" + path + "/ HTTP/1.1\r\n");
         request.print("Host: " + host + "\r\n");
         request.print("Cookie: id="+ cookie + "\r\n");
         request.print("accept: text/plain"+ "\r\n");
+        // content length needs to be the lenght of the number.
         request.print("Content-Length: "+ number.length()+"\r\n");
-        // request.print("accept-charset: UTF-8 \r\n");
-
         request.print("Connection: close\r\n");
         request.print("\r\n");
-        request.flush();
-
         // sending the number choosen
-        String content = number;
         request.print(content); 
         request.flush();
 
-        
         // Receiving response from server
-        String responseLine;
+        String serverResponse;
         
         String s = "";
-        while ((responseLine = response.readLine()) != null) 
+        while ((serverResponse = response.readLine()) != null) 
         {
-            s += " " + responseLine;
+            s += " " + serverResponse;
         }
 
         //Closing socket resp and req

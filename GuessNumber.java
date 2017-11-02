@@ -9,14 +9,13 @@ public class GuessNumber {
         Boolean win = false;
 
         while(!win){
-
+            
             Client client = new Client(host, port);
             BinarySearch search = new BinarySearch(client);
 
             if (search.guess()){
                 win = true;
             }
-
-       }
-    }
+        }
+    }       
 }
